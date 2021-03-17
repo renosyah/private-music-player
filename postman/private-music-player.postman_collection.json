@@ -1,0 +1,669 @@
+{
+	"info": {
+		"_postman_id": "effd3627-f178-4829-b12a-df0c76ab2b13",
+		"name": "private-music-player",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"rikka\",\n    \"phone_number\": \"081231651891\",\n    \"password\": \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/users",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"reno syahputra\",\n    \"phone_number\": \"081231651890\",\n    \"password\": \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/users/auth/register",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone_number\": \"081231651890\",\n    \"password\": \"12345\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/users/auth/login",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"filters\": {},\n    \"search\": {\n        \"phone_number\": \"081231651890\"\n    },\n    \"orders\": {\n        \"name\": \"ASC\"\n    },\n    \"offset\": 0,\n    \"limit\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/users-list",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "one",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "be4a3c4a-f925-4e3d-9e37-58fc5321c414",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/users/:id",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "632682be-c064-40d3-855a-3f57b8e06f8f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Reno Syahputra\",\n    \"phone_number\": \"081231651890\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/users/:id",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "632682be-c064-40d3-855a-3f57b8e06f8f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/users/:id",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "b35d2765-70c7-42db-bcc2-11f7b66c7b28"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "devices",
+			"item": [
+				{
+					"name": "add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\" : \"40594122-5370-4c9b-bb3e-f8698f572071\",\n    \"name\": \"pc\",\n    \"role\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/devices",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"devices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"filters\": {},\n    \"search\": {},\n    \"orders\": {\n        \"name\": \"ASC\"\n    },\n    \"offset\": 0,\n    \"limit\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/devices-list",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"devices-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "one",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "d450ba0b-631f-4828-9b95-6958b0764cc8",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/devices/:id",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"devices",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "54c4c9a7-8fb7-4cce-91a0-6be5b606fe8c"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"e88f924a-de7d-48ff-b705-ec74bfbba82e\",\n    \"name\": \"samsung j8 a\",\n    \"role\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/devices/:id",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"devices",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "54c4c9a7-8fb7-4cce-91a0-6be5b606fe8c"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/devices/:id",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"devices",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "632682be-c064-40d3-855a-3f57b8e06f8f"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "music",
+			"item": [
+				{
+					"name": "add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\" : \"e88f924a-de7d-48ff-b705-ec74bfbba82e\",\n    \"title\":\"music o\",\n    \"description\": \"just music\",\n    \"file_path\": \"/path/to/music.mp3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/musics",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"musics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"filters\": {\n        \"user_id\" : \"e88f924a-de7d-48ff-b705-ec74bfbba82e\"\n    },\n    \"search\": {},\n    \"orders\": {\n        \"title\": \"ASC\"\n    },\n    \"offset\": 0,\n    \"limit\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/musics-list",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"musics-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "one",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2c5264d3-50f1-4725-9c3b-39fb9a5e0478",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/musics/:id",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"musics",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8135e826-bc0d-4e1b-846f-69581a160ae7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "one Random",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "fb329b2c-4f03-4d7c-a298-aebc538047a5",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/musics-random/:user_id",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"musics-random",
+								":user_id"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "e88f924a-de7d-48ff-b705-ec74bfbba82e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"e88f924a-de7d-48ff-b705-ec74bfbba82e\",\n    \"title\": \"music o abc\",\n    \"description\": \"just music\",\n    \"file_path\": \"/path/to/music.mp3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/musics/:id",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"musics",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8135e826-bc0d-4e1b-846f-69581a160ae7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}{{host}}{{port}}/api/v1/musics/:id",
+							"host": [
+								"{{protocol}}{{host}}{{port}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"musics",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "54510bd3-30fd-4611-8906-cf60482acc1c"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "upload file",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": []
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{protocol}}{{host}}{{port}}/api/v1/upload",
+					"host": [
+						"{{protocol}}{{host}}{{port}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -1,0 +1,12 @@
+
+*.md
+.glide/
+.idea/
+.vscode/
+.vs/
+cockroach-data/
+bin/
+vendor/
+design/
+img/
+postman/

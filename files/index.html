@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>
+        Login
+    </title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="./css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="./css/custom.css" type="text/css" rel="stylesheet" media="screen,projection" />
+</head>
+
+<body>
+    <noscript>
+      <strong>We're sorry but app doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>  
+    <div id="app"> 
+ 
+        <div class="valign-wrapper" style="width:100%;position: absolute;">
+            <div class="valign" style="width:100%;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col s12 m8 l6 offset-m2 offset-l3">
+                        <div class="card">
+                            <div class="card-title">
+                                <h5 class="center green-text">
+                                    <br />
+                                    <span>Login</span>
+                                </h5>
+                            </div>
+                            <div class="card-image">
+                            </div>
+                            <div class="card-content">
+                                <div class="row">
+                                    <div class="col s12">
+                                        <div class="input-field">
+                                            <input id="phone_number" type="text" class="validate" placeholder="Phone number" v-model="user.phone_number">
+                                            <label for="phone_number">
+                                                <span>Username</span>
+                                            </label>
+                                        </div>
+                                        <div class="input-field">
+                                            <input id="password" type="password" class="validate" placeholder="password" v-model="user.password">
+                                            <label for="password">
+                                                <span>Password</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="center card-action">
+                                <a class="waves-effect waves-light btn-large btn green white-text" style="text-transform:none;width: 100%;" @click="login">
+                                    <b>
+                                        <span>Login</span>
+                                    </b>    
+                                </a>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+    </div>
+    <!-- built files will be auto injected -->
+    <!--  Scripts-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./js/materialize.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./js/index.js"></script>
+</body>
+
+</html>
