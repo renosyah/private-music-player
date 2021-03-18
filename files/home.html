@@ -23,120 +23,144 @@
     </noscript>
 
     <div id="app">
-        <nav>
-            <div class="nav-wrapper green">
-                <a class="brand-logo">Home</a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a @click="logout">Logout</a></li>
-                </ul>
-            </div>
-        </nav>
-        <br />
-        <div class="container">
-            <div class="row">
-                <div class="col s12">
-                    <a class="green-text">Online Devices : </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12 m6 l4" v-for="device in devices" v-bind:key="device.id">
-                    <div class="card-panel">
-                        <img v-bind:src="device.role == 0 ? './img/controller.png' : './img/speaker.png'" width="50" heigt="50" />
-                        <span class="green-text"> {{ device.name }} </span>
-                        <div class="switch switch-green" style="margin-top:15px">
-                            <label>         
-                                Listen in this device     
-                                <input true-value="1" false-value="0" v-model="device.role" type="checkbox">
-                                <span class="lever" @click="updateDevice(device)"></span>
-                            </label>
+ 
+        <div id="loading-page" v-show="loading">
+            <div class="center container">
+                <div class="row">
+                    <div class="col m2 l4"></div>
+                    <div class="col s12">
+                        <br /><br /><br /><br />
+                        <br /><br /><br /><br />
+                        <div class="preloader-wrapper small active">
+                            <div class="spinner-layer spinner-green-only">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="gap-patch">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="col m2 l4"></div>
                 </div>
             </div>
         </div>
-        <div class="container" >
-            <div class="row">
-                <audio class="col s12" controls ref="audio-player" v-show="false">
-                    <source v-bind:src="media.current_song.file_path" type="audio/mpeg">
-                </audio> 
-            </div>
-            <div class="row" v-show="media.current_song.id != ''">
-                <div class="col s12">
-                    <a class="green-text">Current Song : </a>
+        <div v-show="!loading">
+            <nav>
+                <div class="nav-wrapper green">
+                    <a class="brand-logo">Home</a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a @click="logout">Logout</a></li>
+                    </ul>
                 </div>
-            </div>
-            <div class="row" v-show="media.current_song.id != ''">
-                <div class="col s12">
-                    <div class="card horizontal">
-                    <div class="card-stacked">
-                        <div class="card-content">
-                        <h6><b>{{ media.current_song.title }}</b></h6>
-                        <p>{{ media.current_song.description }}</p>
-                        </div>
-                        <div class="card-action">
-                            <a class="green-text" @click="sendPlayMusic(media.current_song.id)">Play</a>
-                            <a class="green-text" @click="sendStopMusic()">Stop</a>
-                        </div>
-                    </div>
+            </nav>
+            <br />
+            <div class="container">
+                <div class="row">
+                    <div class="col s12">
+                        <a class="green-text">Online Devices : </a>
                     </div>
                 </div>
-            </div>
-            <div class="row" v-show="media.current_song.id != '' && media.current_device.role == 0">
-                <div class="col s4">
-                    <p>Volume</p>
-                </div>
-                <div class="col s8">
-                    <input class="range-green" type="range"  min="1" max="10" v-model="media.volume" @input="media.audio_player.volume = media.volume / 10;sendChangeVolume()" @change="media.audio_player.volume = media.volume / 10;sendChangeVolume()">
-                </div>
-            </div>
-        </div>         
-        <div class="container">
-            <div class="row"  v-show="music.musics.length > 0">
-                <div class="col s12">
-                    <a class="green-text">Playlist : </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12" v-show="music.musics.length == 0">
-                    <p class="center" style="height:300px">Music Empty</p>
-                </div>
-                <div class="col s12 m8 l6" v-for="music in music.musics" v-bind:key="music.id">
-                    <div class="card">
-                        <div class="card-content">
-                            <p>{{ music.title }}</p>
-                            <p>{{ music.description }}</p>
-                        </div>
-                        <div class="card-action">
-                            <a class="green-text" @click="sendPlayMusic(music.id)">Play</a>
+                <div class="row">
+                    <div class="col s12 m6 l4" v-for="device in devices" v-bind:key="device.id">
+                        <div class="card-panel">
+                            <img v-bind:src="device.role == 0 ? './img/controller.png' : './img/speaker.png'" width="50" heigt="50" />
+                            <span class="green-text"> {{ device.name }} </span>
+                            <div class="switch switch-green" style="margin-top:15px">
+                                <label>         
+                                    Listen in this device     
+                                    <input true-value="1" false-value="0" v-model="device.role" type="checkbox">
+                                    <span class="lever" @click="updateDevice(device)"></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="container" >
+                <div class="row">
+                    <audio class="col s12" controls ref="audio-player" v-show="false">
+                        <source v-bind:src="media.current_song.file_path" type="audio/mpeg">
+                    </audio> 
+                </div>
+                <div class="row" v-show="media.current_song.id != ''">
+                    <div class="col s12">
+                        <a class="green-text">Current Song : </a>
+                    </div>
+                </div>
+                <div class="row" v-show="media.current_song.id != ''">
+                    <div class="col s12">
+                        <div class="card horizontal">
+                        <div class="card-stacked">
+                            <div class="card-content">
+                            <h6><b>{{ media.current_song.title }}</b></h6>
+                            <p>{{ media.current_song.description }}</p>
+                            </div>
+                            <div class="card-action">
+                                <a class="green-text" @click="sendPlayMusic(media.current_song.id)">Play</a>
+                                <a class="green-text" @click="sendStopMusic()">Stop</a>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" v-show="media.current_song.id != '' && media.current_device.role == 0">
+                    <div class="col s4">
+                        <p>Volume</p>
+                    </div>
+                    <div class="col s8">
+                        <input class="range-green" type="range"  min="1" max="10" v-model="media.volume" @input="media.audio_player.volume = media.volume / 10;sendChangeVolume()" @change="media.audio_player.volume = media.volume / 10;sendChangeVolume()">
+                    </div>
+                </div>
+            </div>         
+            <div class="container">
+                <div class="row"  v-show="music.musics.length > 0">
+                    <div class="col s12">
+                        <a class="green-text">Playlist : </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12" v-show="music.musics.length == 0">
+                        <p class="center" style="height:300px">Music Empty</p>
+                    </div>
+                    <div class="col s12 m8 l6" v-for="music in music.musics" v-bind:key="music.id">
+                        <div class="card">
+                            <div class="card-content">
+                                <p>{{ music.title }}</p>
+                                <p>{{ music.description }}</p>
+                            </div>
+                            <div class="card-action">
+                                <a class="green-text" @click="sendPlayMusic(music.id)">Play</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container hide-on-large-only">
+                <div class="row">
+                    <div class="col s12">
+                        <a class="waves-effect waves-light btn-large btn green white-text" style="text-transform:none;width: 100%;" @click="logout">
+                            <b>
+                                <span>Logout</span>
+                            </b>    
+                        </a>        
+                    </div>
+                </div>
+            </div>
 
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large green" @click="openUploadFile">
+                    <input ref="file-upload" type="file" enctype="multipart/form-data" multiple v-show="false" @change="onFileChange">
+                    <i class="large material-icons">add</i>
+                </a>
             </div>
-              <ul class="center pagination">
-                <li v-bind:disabled="music.query.offset == 0" @click="music.query.offset -= music.query.offset > 0 ? music.query.limit : 0;loadMusics()"><a><i class="material-icons">chevron_left</i></a></li>
-                <li class="waves-effect"><a @click="music.query.offset+= music.query.limit;loadMusics()"><i class="material-icons">chevron_right</i></a></li>
-            </ul>
-        </div>
-        <div class="container hide-on-large-only">
-            <div class="row">
-                <div class="col s12">
-                    <a class="waves-effect waves-light btn-large btn green white-text" style="text-transform:none;width: 100%;" @click="logout">
-                        <b>
-                            <span>Logout</span>
-                        </b>    
-                    </a>        
-                </div>
-            </div>
+            
         </div>
 
-        <div class="fixed-action-btn">
-            <a class="btn-floating btn-large green" @click="openUploadFile">
-                <input ref="file-upload" type="file" enctype="multipart/form-data" multiple v-show="false" @change="onFileChange">
-                <i class="large material-icons">add</i>
-            </a>
-        </div>
-        
     </div>
 
     <!--  Scripts-->

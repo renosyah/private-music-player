@@ -10,6 +10,7 @@ new Vue({
     data() {
         return {
             is_online : true,
+            loading : false,
             ws : null,
             user : {},
             media : {
@@ -91,7 +92,7 @@ new Vue({
                 }) 
         },
         updateDevice(device){
- 
+
             device.role = (device.role == 0 ? 1 : 0)
 
             axios
@@ -108,22 +109,37 @@ new Vue({
                 }) 
         },
         loadMusics(){
+ 
+            this.loading = this.music.query.offset == 0
 
             this.music.query.filters.user_id = this.user.id
 
             axios
                 .post(this.baseUrl() + '/api/v1/musics-list',this.music.query)
                 .then(response => {
+
+                    this.loading = false
+
                     if (response.data.error != null){
                         return
                     }
                     if (response.data.data == null){
                         return
                     }
+
+                    if (this.music.query.offset > 0){
+                        response.data.data.forEach((e) => {
+                            this.music.musics.push(e)
+                        })
+                        return;
+                    }
                     this.music.musics = response.data.data
 
                 })
                 .catch(errors => {
+
+                    this.loading = false
+
                     console.log(errors)
                 }) 
         },
@@ -155,6 +171,9 @@ new Vue({
             this.$refs["file-upload"].value = null
         },
         uploadSong(file,done){
+                      
+            this.loading = true
+
             let formData = new FormData();
             formData.append('file', file);
             axios.post(this.baseUrl() + '/api/v1/upload', formData, {
@@ -162,6 +181,9 @@ new Vue({
                 'Content-Type': 'multipart/form-data'
                 }
             }).then(response => {
+                
+                this.loading = false
+
                 if (response.data.error != null){
                     return
                 }
@@ -172,15 +194,24 @@ new Vue({
             }) 
         },
         addMusic(music){
+              
+            this.loading = true
+
             axios
                 .post(this.baseUrl() + '/api/v1/musics',music)
                 .then(response => {
+
+                    this.loading = false
+
                     if (response.data.error != null){
                         return
                     }
                     if (this.ws != null) this.ws.send(JSON.stringify({ user_id : this.user.id, name: HOME_EVENT_SONG_UPDATE,data:{}}))
                 })
                 .catch(errors => {
+
+                    this.loading = false
+
                     console.log(errors)
                 }) 
         },
@@ -204,6 +235,14 @@ new Vue({
                 window.location = this.baseUrl() + "/index.html"
                 return;
             }
+
+            vm = this
+            window.onscroll = function(ev) {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                    vm.music.query.offset += vm.music.query.limit
+                    vm.loadMusics()
+                }
+            };
 
             this.user = JSON.parse(window.localStorage.getItem('session'))
 
