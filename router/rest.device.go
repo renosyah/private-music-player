@@ -10,78 +10,84 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func HandlerAddDevice(w http.ResponseWriter, r *http.Request) (interface{}, *api.Error) {
-	ctx := r.Context()
+func (h *RouterHub) addDevice(d model.Device) {
 
-	var param model.Device
+	h.EventBroadcast <- model.EventData{UserID: d.UserID.String(), Name: "HOME_EVENT_DEVICE_UPDATE"}
 
-	err := ParseBodyData(ctx, r, &param)
-	if err != nil {
-		return nil, api.NewError(errors.Wrap(err, "Device/create/param"),
-			http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
-	}
+	h.ConnectionMx.Lock()
+	defer h.ConnectionMx.Unlock()
 
-	return deviceModule.Add(ctx, param)
+	h.Devices[d.ID] = d
 }
 
-func HandlerAllDevice(w http.ResponseWriter, r *http.Request) (interface{}, *api.Error) {
-	ctx := r.Context()
-	var param model.ListQuery
+func (h *RouterHub) removeDevice(d model.Device) {
 
-	err := ParseBodyData(ctx, r, &param)
-	if err != nil {
-		return nil, api.NewError(errors.Wrap(err, "Device/all/param"),
-			http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+	h.EventBroadcast <- model.EventData{UserID: d.UserID.String(), Name: "HOME_EVENT_DEVICE_UPDATE"}
+
+	h.ConnectionMx.Lock()
+	defer h.ConnectionMx.Unlock()
+
+	if _, exist := h.Devices[d.ID]; exist {
+		delete(h.Devices, d.ID)
 	}
-
-	return deviceModule.All(ctx, param)
 }
 
-func HandlerOneDevice(w http.ResponseWriter, r *http.Request) (interface{}, *api.Error) {
+func (h *RouterHub) HandlerUpdateAllDevice(w http.ResponseWriter, r *http.Request) (interface{}, *api.Error) {
 	ctx := r.Context()
 	vars := mux.Vars(r)
-
-	id, err := uuid.FromString(vars["id"])
-	if err != nil {
-		return nil, api.NewError(errors.Wrap(err, "Device/detail"),
-			http.StatusText(http.StatusNotFound), http.StatusNotFound)
-	}
-
-	return deviceModule.One(ctx, model.Device{ID: id})
-}
-
-func HandlerUpdateDevice(w http.ResponseWriter, r *http.Request) (interface{}, *api.Error) {
-	ctx := r.Context()
-	vars := mux.Vars(r)
-
 	var param model.Device
 
-	id, err := uuid.FromString(vars["id"])
+	uID, err := uuid.FromString(vars["user_id"])
 	if err != nil {
-		return nil, api.NewError(errors.Wrap(err, "Device/update"),
+		return nil, api.NewError(errors.Wrap(err, "Devices/on"),
 			http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	}
 
 	err = ParseBodyData(ctx, r, &param)
 	if err != nil {
-		return nil, api.NewError(errors.Wrap(err, "Device/update/param"),
+		return nil, api.NewError(errors.Wrap(err, "Music/update/param"),
 			http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 	}
 
-	param.ID = id
+	h.ConnectionMx.Lock()
+	defer h.ConnectionMx.Unlock()
 
-	return deviceModule.Update(ctx, param)
+	for k, v := range h.Devices {
+		if v.UserID == uID {
+			h.Devices[k] = model.Device{
+				ID:     v.ID,
+				UserID: v.UserID,
+				Name:   v.Name,
+				Role:   model.ROLE_MEDIA_CONTROLLER,
+			}
+		}
+	}
+
+	if _, exist := h.Devices[param.ID]; exist {
+		h.Devices[param.ID] = param
+	}
+
+	return param, nil
 }
 
-func HandlerDeleteDevice(w http.ResponseWriter, r *http.Request) (interface{}, *api.Error) {
-	ctx := r.Context()
+func (h *RouterHub) HandlerAllDevice(w http.ResponseWriter, r *http.Request) (interface{}, *api.Error) {
 	vars := mux.Vars(r)
 
-	id, err := uuid.FromString(vars["id"])
+	uID, err := uuid.FromString(vars["user_id"])
 	if err != nil {
-		return nil, api.NewError(errors.Wrap(err, "Device/delete"),
+		return nil, api.NewError(errors.Wrap(err, "Devices/on"),
 			http.StatusText(http.StatusNotFound), http.StatusNotFound)
 	}
 
-	return deviceModule.Delete(ctx, model.Device{ID: id})
+	h.ConnectionMx.Lock()
+	defer h.ConnectionMx.Unlock()
+
+	devices := []model.Device{}
+	for _, v := range h.Devices {
+		if v.UserID == uID {
+			devices = append(devices, v)
+		}
+	}
+
+	return devices, nil
 }

@@ -1,8 +1,6 @@
 
 const HOME_EVENT_DEVICE_UPDATE = "HOME_EVENT_DEVICE_UPDATE"
 const HOME_EVENT_SONG_UPDATE = "HOME_EVENT_SONG_UPDATE"
-const HOME_EVENT_DEVICE_LOGIN  = "HOME_EVENT_DEVICE_LOGIN"
-const HOME_EVENT_DEVICE_LOGOUT = "HOME_EVENT_DEVICE_LOGOUT"
 const HOME_EVENT_MUSIC_PLAY = "HOME_EVENT_MUSIC_PLAY"
 const HOME_EVENT_VOLUME_CHANGE = "HOME_EVENT_VOLUME_CHANGE"
 const HOME_EVENT_MUSIC_STOP = "HOME_EVENT_MUSIC_STOP"
@@ -16,7 +14,12 @@ new Vue({
             user : {},
             media : {
                 audio_player: null,
-                current_device : null,
+                current_device : {
+                    id : "",
+                    user_id : "",
+                    name : "",
+                    role : 0
+                },
                 volume : 5,
                 current_song: {
                     id: "",
@@ -26,20 +29,7 @@ new Vue({
                     file_path: ""
                 }
             },
-            device : {
-                devices : [],
-                query : {
-                    filters: {
-                        user_id : ""
-                    },
-                    search: {},
-                    orders: {
-                        name: "ASC"
-                    },
-                    offset: 0,
-                    limit: 10
-                },
-            },
+            devices : [],
             music : {
                 musics : [],
                 query : {
@@ -74,10 +64,8 @@ new Vue({
     methods : {
         loadDevices(){
 
-            this.device.query.filters.user_id = this.user.id
-
             axios
-                .post(this.baseUrl() + '/api/v1/devices-list',this.device.query)
+                .get(this.baseUrl() + '/api/v1/devices/' + this.user.id)
                 .then(response => {
                     if (response.data.error != null){
                         return
@@ -85,7 +73,34 @@ new Vue({
                     if (response.data.data == null){
                         return
                     }
-                    this.device.devices = response.data.data
+                    this.devices = response.data.data
+
+                    this.devices.forEach((e)=> {
+                        if (e.id == this.media.current_device.id) {
+                            this.media.current_device = e
+                        }
+                    })
+
+                    if (this.media.current_song.id != ""){
+                        this.playAudioPlayer(this.media.current_song.id)
+                    }
+
+                })
+                .catch(errors => {
+                    console.log(errors)
+                }) 
+        },
+        updateDevice(device){
+ 
+            device.role = (device.role == 0 ? 1 : 0)
+
+            axios
+                .put(this.baseUrl() + '/api/v1/devices/' + device.user_id, device)
+                .then(response => {
+                    if (response.data.error != null){
+                        return
+                    }
+                    if (this.ws != null) this.ws.send(JSON.stringify({ user_id : this.user.id, name: HOME_EVENT_DEVICE_UPDATE,data:{}}))
 
                 })
                 .catch(errors => {
@@ -178,21 +193,6 @@ new Vue({
         sendChangeVolume(){
             if (this.ws != null) this.ws.send(JSON.stringify({ user_id : this.user.id, name: HOME_EVENT_VOLUME_CHANGE,data:{volume : this.media.volume }}))
         },
-        updateDevice(device){
- 
-            axios
-                .put(this.baseUrl() + '/api/v1/devices/' + device.id , device)
-                .then(response => {
-                    if (response.data.error != null){
-                        return
-                    }
-                    if (this.ws != null) this.ws.send(JSON.stringify({ name: HOME_EVENT_DEVICE_UPDATE,data:{}}))
-
-                })
-                .catch(errors => {
-                    console.log(errors)
-                }) 
-        },
         logout(){
             if (window.localStorage.getItem('session')) {
                 window.localStorage.removeItem('session')
@@ -207,6 +207,10 @@ new Vue({
 
             this.user = JSON.parse(window.localStorage.getItem('session'))
 
+            this.media.current_device.id = this.makeid(15)
+            this.media.current_device.name = window.navigator.platform
+            this.media.current_device.user_id = this.user.id
+
             this.initAudioPlayer()
             this.loadDevices()
             this.loadMusics()
@@ -214,7 +218,7 @@ new Vue({
 
         },
         initHomeWebsocket(){
-            this.ws = new WebSocket(this.baseWsUrl() + "/ws-home/" + this.makeid(15))
+            this.ws = new WebSocket(this.baseWsUrl() + "/ws-home?u_id="+this.user.id+"&id="+this.media.current_device.id+"&name="+this.media.current_device.name)
             this.ws.onmessage = (evt) => {
                 let event = JSON.parse(evt.data)
                 if (event.user_id != this.user.id){
@@ -222,19 +226,13 @@ new Vue({
                 }
 
                 switch (event.name) {
-                    case  HOME_EVENT_DEVICE_UPDATE:
-
-                        this.device.query.offset = 0
+                    case HOME_EVENT_DEVICE_UPDATE:
                         this.loadDevices()
                         break;
                     case HOME_EVENT_SONG_UPDATE:
 
                         this.music.query.offset = 0
                         this.loadMusics()
-                        break;
-                    case HOME_EVENT_DEVICE_LOGIN:
-                        break;
-                    case HOME_EVENT_DEVICE_LOGOUT:
                         break;
                     case HOME_EVENT_MUSIC_PLAY:
 
@@ -252,7 +250,7 @@ new Vue({
                 }
             }
             this.ws.onopen = () => {
-                console.log("websoket open")   
+                console.log("websoket open") 
             }
             this.ws.onclose = () => {
                 console.log("websoket close")  
@@ -300,12 +298,12 @@ new Vue({
                 }
 
                 this.media.current_song = response.data.data
-
+                this.media.audio_player.load()
 
                 if (this.media.current_device.role == 0) {
                     return;
                 }
-                this.media.audio_player.load()
+
                 this.media.audio_player.play()
             })
             .catch(errors => {

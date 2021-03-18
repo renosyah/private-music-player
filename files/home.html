@@ -32,38 +32,38 @@
             </div>
         </nav>
         <br />
-        <div class="container"  v-show="media.current_device == null">
+        <div class="container">
             <div class="row">
-                <div class="col s12" v-show="device.devices.length == 0">
-                    <p class="center" style="height:300px">Device Empty</p>
+                <div class="col s12">
+                    <a class="green-text">Online Devices : </a>
                 </div>
-                <div class="col s6 m4 l2" v-for="device in device.devices" v-bind:key="device.id">
-                    <div class="card">
-                        <div class="card-image">
-                            <img class="center-align" v-bind:src="device.role == 0 ? './img/controller.png' : './img/speaker.png'" width="100" @click="device.role = (device.role == 0 ?  1 : 0);updateDevice(device)">
-                        </div>
-                        <div class="card-content">
-                            <p>{{ device.name }}</p>
-                        </div>
-                        <div class="card-action">
-                            <a v-show="media.current_device == null" class="btn green white-text" style="text-transform:none;font-size:12px" @click="media.current_device = device">Choose</a>
-                            <br />
+            </div>
+            <div class="row">
+                <div class="col s12 m6 l4" v-for="device in devices" v-bind:key="device.id">
+                    <div class="card-panel">
+                        <img v-bind:src="device.role == 0 ? './img/controller.png' : './img/speaker.png'" width="50" heigt="50" />
+                        <span class="green-text"> {{ device.name }} </span>
+                        <div class="switch switch-green" style="margin-top:15px">
+                            <label>         
+                                Listen in this device     
+                                <input true-value="1" false-value="0" v-model="device.role" type="checkbox">
+                                <span class="lever" @click="updateDevice(device)"></span>
+                            </label>
                         </div>
                     </div>
                 </div>
-
             </div>
-              <ul class="center pagination">
-                <li v-bind:disabled="device.query.offset == 0" @click="device.query.offset -= query.offset > 0 ? device.query.limit : 0;loadDevices()"><a><i class="material-icons">chevron_left</i></a></li>
-                <li class="waves-effect"><a @click="device.query.offset+= device.query.limit;loadDevices()"><i class="material-icons">chevron_right</i></a></li>
-            </ul>
         </div>
-         <br />
         <div class="container" >
             <div class="row">
                 <audio class="col s12" controls ref="audio-player" v-show="false">
                     <source v-bind:src="media.current_song.file_path" type="audio/mpeg">
                 </audio> 
+            </div>
+            <div class="row" v-show="media.current_song.id != ''">
+                <div class="col s12">
+                    <a class="green-text">Current Song : </a>
+                </div>
             </div>
             <div class="row" v-show="media.current_song.id != ''">
                 <div class="col s12">
@@ -90,7 +90,12 @@
                 </div>
             </div>
         </div>         
-        <div class="container" v-show="media.current_device != null">
+        <div class="container">
+            <div class="row"  v-show="music.musics.length > 0">
+                <div class="col s12">
+                    <a class="green-text">Playlist : </a>
+                </div>
+            </div>
             <div class="row">
                 <div class="col s12" v-show="music.musics.length == 0">
                     <p class="center" style="height:300px">Music Empty</p>

@@ -52,12 +52,9 @@ var rootCmd = &cobra.Command{
 		apiRouter.Handle("/users/{id}", router.HandlerFunc(router.HandlerUpdateUser)).Methods(http.MethodPut, http.MethodOptions)
 		apiRouter.Handle("/users/{id}", router.HandlerFunc(router.HandlerDeleteUser)).Methods(http.MethodDelete, http.MethodOptions)
 
-		// devices api
-		apiRouter.Handle("/devices", router.HandlerFunc(router.HandlerAddDevice)).Methods(http.MethodPost, http.MethodOptions)
-		apiRouter.Handle("/devices-list", router.HandlerFunc(router.HandlerAllDevice)).Methods(http.MethodPost, http.MethodOptions)
-		apiRouter.Handle("/devices/{id}", router.HandlerFunc(router.HandlerOneDevice)).Methods(http.MethodGet, http.MethodOptions)
-		apiRouter.Handle("/devices/{id}", router.HandlerFunc(router.HandlerUpdateDevice)).Methods(http.MethodPut, http.MethodOptions)
-		apiRouter.Handle("/devices/{id}", router.HandlerFunc(router.HandlerDeleteDevice)).Methods(http.MethodDelete, http.MethodOptions)
+		// device
+		apiRouter.Handle("/devices/{user_id}", router.HandlerFunc(routerHub.HandlerAllDevice)).Methods(http.MethodGet, http.MethodOptions)
+		apiRouter.Handle("/devices/{user_id}", router.HandlerFunc(routerHub.HandlerUpdateAllDevice)).Methods(http.MethodPut, http.MethodOptions)
 
 		// musics api
 		apiRouter.Handle("/musics", router.HandlerFunc(router.HandlerAddMusic)).Methods(http.MethodPost, http.MethodOptions)
@@ -67,7 +64,7 @@ var rootCmd = &cobra.Command{
 		apiRouter.Handle("/musics/{id}", router.HandlerFunc(router.HandlerUpdateMusic)).Methods(http.MethodPut, http.MethodOptions)
 		apiRouter.Handle("/musics/{id}", router.HandlerFunc(router.HandlerDeleteMusic)).Methods(http.MethodDelete, http.MethodOptions)
 
-		r.HandleFunc("/ws-home/{id}", routerHub.HandleStreamHome)
+		r.HandleFunc("/ws-home", routerHub.HandleStreamHome)
 
 		// upload file
 		apiRouter.Handle("/upload", router.HandlerFunc(router.HandlerUploadFile)).Methods(http.MethodPost, http.MethodOptions)

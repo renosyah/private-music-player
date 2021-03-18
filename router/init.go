@@ -15,16 +15,14 @@ import (
 var (
 	dbPool *sql.DB
 
-	userModule   *api.UserModule
-	deviceModule *api.DeviceModule
-	musicModule  *api.MusicModule
+	userModule  *api.UserModule
+	musicModule *api.MusicModule
 )
 
 func Init(db *sql.DB) {
 	dbPool = db
 
 	userModule = api.NewUserModule(db)
-	deviceModule = api.NewDeviceModule(db)
 	musicModule = api.NewMusicModule(db)
 }
 

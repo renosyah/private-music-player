@@ -3,18 +3,28 @@ package router
 import (
 	"net/http"
 
-	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	"github.com/renosyah/private-music-player/model"
+	uuid "github.com/satori/go.uuid"
 )
 
 func (h *RouterHub) HandleStreamHome(w http.ResponseWriter, r *http.Request) {
 
+	var err error
 	ctx := r.Context()
-	vars := mux.Vars(r)
+	device := model.Device{
+		ID:   r.FormValue("id"),
+		Name: r.FormValue("name"),
+		Role: model.ROLE_MEDIA_CONTROLLER,
+	}
 
-	uID := vars["id"]
-	if uID == "" {
+	if device.ID == "" || device.Name == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	device.UserID, err = uuid.FromString(r.FormValue("u_id"))
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -25,9 +35,12 @@ func (h *RouterHub) HandleStreamHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	h.addDevice(device)
+	defer h.removeDevice(device)
+
 	defer wsconn.Close()
 
-	go h.receiveBroadcastsEvent(ctx, wsconn, uID)
+	go h.receiveBroadcastsEvent(ctx, wsconn, device.ID)
 
 	for {
 

@@ -19,3 +19,22 @@
 .range-green[type=range] + .thumb.active .value {
     color: #4caf50 !important;
 }
+
+.switch-green label .lever {
+    background-color: #bdbdbd;
+}
+.switch-green label input[type=checkbox]:checked+.lever {
+    background-color: #4caf50 !important;
+}
+
+.switch-green label .lever:after {
+    background-color: #616161;
+}
+.switch-green label input[type=checkbox]:checked+.lever:after {
+    background-color: white;
+}  
+
+.switch label .lever {
+    top: 5px;
+    float: right;
+ }

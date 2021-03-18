@@ -21,6 +21,7 @@ type (
 		ConnectionMx sync.RWMutex
 
 		// event in home
+		Devices        map[string]model.Device
 		Subscriber     map[string]chan model.EventData
 		EventBroadcast chan model.EventData
 	}
@@ -29,6 +30,7 @@ type (
 func NewRouterHub() *RouterHub {
 	h := &RouterHub{
 		ConnectionMx:   sync.RWMutex{},
+		Devices:        make(map[string]model.Device),
 		Subscriber:     make(map[string]chan model.EventData),
 		EventBroadcast: make(chan model.EventData),
 	}
