@@ -2,6 +2,8 @@ package router
 
 import (
 	"net/http"
+	"sort"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
@@ -88,6 +90,16 @@ func (h *RouterHub) HandlerAllDevice(w http.ResponseWriter, r *http.Request) (in
 			devices = append(devices, v)
 		}
 	}
+
+	sort.Slice(devices, func(i, j int) bool {
+		switch strings.Compare(devices[i].Name, devices[j].Name) {
+		case -1:
+			return true
+		case 1:
+			return false
+		}
+		return devices[i].Name > devices[j].Name
+	})
 
 	return devices, nil
 }
